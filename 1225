@@ -1,0 +1,37 @@
+#include<stdio.h>
+//#include<time.h>
+
+int ans[10005][10];
+
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	
+	//fill the answer table
+	ans[1][1] = 1;
+	for(int i = 2; i <= 1e4; i++){
+		for(int j = 0; j <= 9; j++){
+			ans[i][j] = ans[i - 1][j];
+		}
+		int temp = i;
+		while(temp){
+			ans[i][temp % 10]++;
+			temp /= 10;
+		}
+	}
+	//print the answer
+	int T;
+	scanf("%d", &T);
+	int n;
+	while(T--){
+		scanf("%d", &n);
+		for(int i = 0; i < 9; i++){
+			printf("%d ", ans[n][i]);
+		}
+		printf("%d\n", ans[n][9]);
+	}
+	
+	//printf("Total time: %.4f s.", (double)clock()/CLOCKS_PER_SEC); 
+	return 0;
+}
