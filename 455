@@ -1,0 +1,50 @@
+#include<stdio.h>
+#include<string.h>
+//#include<time.h>
+
+int main() {
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	int T;
+	scanf("%d", &T);
+	
+	char string[82];
+	scanf("%s", string);
+	int len = strlen(string);
+	for(int step = 1; step <= len; step++) {
+		if(!(len % step)) {
+			int i;
+			for(i = step; i < len; i++) {
+				if(string[i] != string[i - step]) {
+					break;
+				}
+			}
+			if(i == len) {
+				printf("%d\n", step);
+				break;
+			}
+		}
+	}
+	T--;
+	while(T--) {
+		char string[82];
+		scanf("%s", string);
+		int len = strlen(string);
+		for(int step = 1; step <= len; step++) {
+			if(!(len % step)) {
+				int i;
+				for(i = step; i < len; i++) {
+					if(string[i] != string[i - step]) {
+						break;
+					}
+				}
+				if(i == len) {
+					printf("\n%d\n", step);
+					break;
+				}
+			}
+		}
+	}
+	//printf("Total time: %.4f s.", (double)clock()/CLOCKS_PER_SEC);
+	return 0;
+}
