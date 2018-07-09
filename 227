@@ -1,0 +1,109 @@
+#include<stdio.h>
+//#include<time.h>
+//#include<iostream>
+//using namespace std;
+
+char table[5][5];
+
+int main() {
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	char temp;
+	int x, y;//table[x][y]
+	int count = 0;
+	while(++count, (temp = getchar()) != 'Z') {
+		//input the table
+		table[0][0] = temp;
+		if(temp == ' ') x = 0, y = 0;
+		for(int i = 1; i < 5; i++) {
+			table[0][i] = getchar();
+			if(table[0][i] == ' ') x = 0, y = i;
+		}
+		for(int i = 1; i < 5; i++) {
+			getchar();
+			for(int j = 0; j < 5; j++) {
+				table[i][j] = getchar();
+				if(table[i][j] == ' ') x = i, y = j;
+			}
+		}
+		getchar();
+		
+//		for(int i = 0; i < 25; i++){
+//			putchar(*(*table + i));
+//		}
+//		putchar('\n');
+
+		//execute the command
+		char command;
+		bool isError = false;
+		while((command = getchar()) != '0') {
+			if(command == '\n') continue;
+			
+//			cout << "execute the command" << endl;
+//			cout << command << endl;
+
+			switch (command) {
+				case 'A':
+					if(x > 0) {
+						table[x][y] ^= table[x - 1][y];
+						table[x - 1][y] ^= table[x][y];
+						table[x][y] ^= table[x - 1][y];
+						x -= 1;
+					} else
+						isError = true;
+					break;
+				case 'B':
+					if(x < 4) {
+						table[x][y] ^= table[x + 1][y];
+						table[x + 1][y] ^= table[x][y];
+						table[x][y] ^= table[x + 1][y];
+						x += 1;
+					} else
+						isError = true;
+					break;
+				case 'L':
+					if(y > 0) {
+						table[x][y] ^= table[x][y - 1];
+						table[x][y - 1] ^= table[x][y];
+						table[x][y] ^= table[x][y - 1];
+						y -= 1;
+					} else
+						isError = true;
+					break;
+				case 'R':
+					if(y < 4) {
+						table[x][y] ^= table[x][y + 1];
+						table[x][y + 1] ^= table[x][y];
+						table[x][y] ^= table[x][y + 1];
+						y += 1;
+					} else
+						isError = true;
+					break;
+			}
+			if(isError) {
+				break;
+			}
+		}
+		//print the title
+		if(count - 1) printf("\nPuzzle #%d:\n", count);
+		else printf("Puzzle #%d:\n", count);
+		//print the results
+		if(isError) {
+			//attention! You need to get the chars left in stdin
+			while((command = getchar()) != '0');
+			printf("This puzzle has no final configuration.\n");
+		} else {
+			for(int i = 0; i < 5; i++) {
+				for(int j = 0; j < 4; j++){
+					putchar(table[i][j]);
+					putchar(' ');
+				}
+				putchar(table[i][4]);
+				putchar('\n');
+			}
+		}
+		getchar();// read '\n' in command
+	}
+	//printf("Total time: %.4f s.", (double)clock()/CLOCKS_PER_SEC);
+	return 0;
+}
