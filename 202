@@ -1,0 +1,76 @@
+#include<stdio.h>
+#include<time.h>
+//#include<iostream>
+//using namespace std;
+
+int n, d;//fraction: n/d
+int decimals[3333];//log .xyz...
+int log[3333];
+int main() {
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	while(1 == scanf("%d", &n)) {
+		scanf("%d", &d);
+		//if((count - 1)) printf("\n");//attention...!
+		printf("%d/%d = %d.", n, d, n/d);
+		n %= d;
+		decimals[1] = 10 * n / d;
+		log[1] = n;//log[i] decides decimals[i]
+		if(!n) {
+			printf("(0)\n   1 = number of digits in repeating cycle\n");
+			printf("\n");//attention
+			continue;
+		}
+		n = 10 * n % d;
+		int count = 2;//denote n is the count'th n...
+		//attention: (1)整除(2)超长
+		while(n) {
+//			if(count == 65)
+//				printf("arrive");
+			decimals[count] = 10 * n / d;
+			log[count] = n;
+			//cout <<"count("<<count<<"): "<< log[count]<< "*10/397=" << decimals[count] << endl;
+			int i;
+			for(i = 1; i < count; i++) {
+				//printf("log[%d]: %d and log[count=%d]: %d\n", i, log[i], count, log[count]);
+				if(log[i] == log[count]) {
+					break;
+				}
+			}
+			if (i < count && count <= 51) {
+				//get the recycle period
+				for(int j = 1; j < i; j++) {
+					printf("%d", decimals[j]);
+				}
+				printf("(");
+				for(int j = i; j < count; j++) {
+					printf("%d", decimals[j]);
+				}
+				printf(")\n   %d = number of digits in repeating cycle\n", count - i);
+				break;
+			} else if (i < count) {
+				for(int j = 1; j < i; j++) {
+					printf("%d", decimals[j]);
+				}
+				printf("(");
+				for(int j = i; j <=50; j++){
+					printf("%d", decimals[j]);
+				}
+				if(i <= 50) printf("...)\n   %d = number of digits in repeating cycle\n", count - i);
+				break;
+			}
+			n = 10 * n % d;
+			count++;
+		}
+		if(!n) {
+			for(int j = 1; j < count; j++) {
+				printf("%d", decimals[j]);
+			}
+			printf("(0)\n   1 = number of digits in repeating cycle\n");
+		}
+		printf("\n");
+	}
+
+	//printf("Total time: %.4f s.", (double)clock()/CLOCKS_PER_SEC);
+	return 0;
+}
