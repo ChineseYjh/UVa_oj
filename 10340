@@ -1,0 +1,29 @@
+#include<stdio.h>
+//#include<time.h>
+#define MAX 1000001
+char s[MAX];
+char t[MAX];
+//attention: "language option" : "C++11 5.3.0 - GNU C++ Compiler with options: -lm -lcrypt -O2 -std=c++11 -pipe -DONLINE_JUDGE"
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	
+	while(EOF != scanf("%s%s", s, t)){
+		int sptr = 0;
+		int tptr = 0;
+		while(s[sptr] && t[tptr]){
+			if(s[sptr] == t[tptr])
+				sptr++, tptr++;
+			else
+				tptr++;
+		}
+		if(!s[sptr])
+			printf("Yes\n");
+		else
+			printf("No\n");
+	}
+	
+	//printf("Total time: %.4f s.", (double)clock()/CLOCKS_PER_SEC); 
+	return 0;
+}
