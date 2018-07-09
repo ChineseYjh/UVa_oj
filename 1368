@@ -1,0 +1,44 @@
+#include<stdio.h>
+//#include<time.h>
+
+#define Max(x, y) (hash[x - 'A'] >= hash[y - 'A']? x : y)
+char dnas[52][1002];
+char ans[1002];
+int hash[26];
+
+int main() {
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+
+	int T, m, n;
+	scanf("%d", &T);
+	while(T--) {
+		//input(m is number, n is length)
+		scanf("%d%d", &m, &n);
+		for(int i = 0; i < m; i++) {
+			scanf("%s", dnas[i]);
+		}
+		int dis = 0;
+		for(int i = 0; i < n; i++) {
+			//greedy; fill every bit of the answer and log the distance changes
+			hash['A' - 'A'] = 0;
+			hash['C' - 'A'] = 0;
+			hash['G' - 'A'] = 0;
+			hash['T' - 'A'] = 0;
+			for(int j = 0; j < m; j++)
+				hash[dnas[j][i] - 'A']++;
+			char maxGene = Max('A', 'C');
+			maxGene = Max(maxGene, 'G');
+			maxGene = Max(maxGene, 'T');
+			ans[i] = maxGene;
+			dis += hash['A' - 'A'] + hash['C' - 'A'] + hash['G' - 'A'] + hash['T' - 'A'] - hash[maxGene - 'A'];
+		}
+		for(int i = 0; i < n; i++) {
+			putchar(ans[i]);
+		}
+		printf("\n%d\n", dis);
+	}
+
+	//printf("Total time: %.4f s.", (double)clock()/CLOCKS_PER_SEC);
+	return 0;
+}
