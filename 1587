@@ -1,0 +1,81 @@
+#include<stdio.h>
+//#include<time.h>
+
+int recs[6][2];//recs[i][0] is i'th rectangle's width and recs[i][1] is its height
+int log[7];
+int logptr;
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	
+	while(EOF != scanf("%d%d", &recs[0][0], &recs[0][1])){
+		//input
+		for(int i = 1; i < 6; i++)
+			scanf("%d%d", &recs[i][0], &recs[i][1]);
+		//compare and judge, 3 times all told, and after every judge we decrease the compare range
+		int i;
+		logptr = 0;
+		for(i = 0; i < 3; i++){
+			int j;
+			for(j = i + 1; j < 6 - i; j++){
+				if((recs[j][0] == recs[i][0] && recs[j][1] == recs[i][1]) || (recs[j][0] == recs[i][1] && recs[j][1] == recs[i][0])){
+					//find one the same
+					//swap with the last rec to decrease the range
+					recs[j][0] ^= recs[5 - i][0];//width
+					recs[5 - i][0] ^= recs[j][0];
+					recs[j][0] ^= recs[5 - i][0];
+					
+					recs[j][1] ^= recs[5 - i][1];//height
+					recs[5 - i][1] ^= recs[j][1];
+					recs[j][1] ^= recs[5 - i][1];
+					//log
+					log[logptr++] = recs[i][0];
+					log[logptr++] = recs[i][1];
+					break;
+				}
+			}
+			if(j == 6 - i) break;
+		}
+		if(i == 3) {
+			//make sure it's (ab)(bc)(ca), in this (xy) means xy or yx
+			//negative example：3,3,3,2,2,2
+			int i, j = 0;
+			for(i = 2; i < 4; i++){
+				if(log[i] == log[0] || log[i] == log[1]){
+					j = i;
+					if(log[i] == log[0]) log[0] = log[1];
+					else log[1] = log[0];
+					break;
+				}
+			}
+			if(i == 4){
+				printf("IMPOSSIBLE\n");
+				continue;
+			}
+			for(i = 4; i < 6; i++){
+				if(log[i] == log[0]){
+					break;
+				}
+			}
+			if(i == 6) {
+				printf("IMPOSSIBLE\n");
+				continue;
+			}
+			logptr = 0;
+			for(int k = 2; k < 6; k++){
+				if(k != i && k != j){
+					log[logptr++] = log[k];
+				}
+			}
+			if(log[0] == log[1]){
+				printf("POSSIBLE\n");
+			}
+			else printf("IMPOSSIBLE\n");
+		}
+		else printf("IMPOSSIBLE\n");
+	}
+	
+	//printf("Total time: %.4f s.", (double)clock()/CLOCKS_PER_SEC); 
+	return 0;
+}
