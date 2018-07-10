@@ -1,0 +1,50 @@
+#include<stdio.h>
+#include<time.h>
+#include<math.h>
+//看到输出范围已知，所以尝试打表
+#define err 1e-4
+
+double dectable[11][32];//存有效数字 
+int bittable[11][32];//存10的幂次 
+char input[50];//存输入 
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	//打表
+	for(int m = 0; m <= 9; m++){
+		for(int e = 1; e <= 30; e++){
+			//那个数可以转换为：(1 - 2^(-m-1)) * 2^(2^e - 1) [ == 10^exp]
+			double a = 1 - pow(2, -m - 1);
+			double b = (1<<e) - 1;
+			double exp = log10(a) + log10(2) * b;
+			bittable[m][e] = floor(exp);
+			dectable[m][e] = pow(10, exp - bittable[m][e]);
+		}
+	}
+	//输入
+	double mantissa;
+	int exponent;
+	char e;
+	while(scanf("%s", input)){
+		//结束输入
+		if(input[0] == '0' && input[1] == 'e' && input[2] == '0') break;
+		//处理输入
+		sscanf(input + 18, "%d", &exponent); 
+		input[17] = '\0';
+		sscanf(input, "%lf", &mantissa);
+		//查表 
+		for(int m = 0; m <= 9; m++){
+			int e;
+			for(e = 1; e <= 30; e++){
+				if(fabs(mantissa - dectable[m][e]) < err && bittable[m][e] == exponent){
+					printf("%d %d\n", m, e);
+					break;
+				}
+			}
+			if(e < 31) break;
+		}
+	}
+	//printf("Total time: %.4f s.", (double)clock()/CLOCKS_PER_SEC); 
+	return 0;
+}
