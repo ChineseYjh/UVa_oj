@@ -1,0 +1,42 @@
+#include<stdio.h>
+#include<string.h>
+//#include<time.h>
+
+#define Max(x, y) (x) > (y) ? (x) : (y)
+#define Min(x, y) (x) < (y) ? (x) : (y)
+//字符串滑动匹配 
+char bottom[102];
+char top[102];
+
+int main() {
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+
+	while(~scanf("%s%s", bottom, top)) {
+		int len1 = strlen(top);
+		int len2 = strlen(bottom);
+		int min = len1 + len2;
+		int temp;
+		for(int i = len1 - 1; i > -len2; i--){//i是滑动字符串bottom的头坐标，坐标原点是top的头 
+			if(i >= 0 && (temp = Max(len2 + i, len1)) < min || i < 0 && (temp = Max(len1 - i, len2)) < min){
+				//此时合串长比之前的串要小
+				//定判断匹配是否成功的串范围[left, right]
+				int left = Max(i, 0);
+				int right = Min(len1 - 1, len2 - 1 + i);
+				int ptr = left;
+				for(; ptr <= right; ptr++){
+					if(bottom[ptr - i] - '0' + top[ptr] - '0' > 3){
+						break;
+					}
+				}
+				if(ptr > right){
+					//都匹配，可更新
+					min = temp; 
+				}
+			}
+		}
+		printf("%d\n", min);
+	}
+	//printf("Total time: %.4f s.", (double)clock()/CLOCKS_PER_SEC);
+	return 0;
+}
