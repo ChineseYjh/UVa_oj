@@ -1,0 +1,69 @@
+#include<stdio.h>
+//#include<time.h>
+//#include<string.h>
+
+char header[6666];
+char table[8][(1<<7)];//(len, value) -> char_in_header
+
+int my_getline(char *header){
+	//get the line of the stdin, terminated by '\n' or '\r' or EOF; return the length of the string
+	int temp;
+	int i = 0;
+	while(EOF != (temp = getchar())){
+		if(temp !='\n' && temp != '\r'){
+			*(header + i) = (char)temp;
+			i++;
+		}
+		else break;
+	}
+	//attention: put '\0' at the end
+	*(header + i) = '\0';
+	if(temp == EOF) return EOF;
+	else return i;
+}
+
+int readbit(int num){
+	//read num bits(0 or 1) from stdin, return the decimal value
+	char temp;
+	int ans = 0;
+	int times = 0;
+	while(times < num && (temp = getchar())){
+		if(temp != '\r' && temp != '\n'){
+			times++;
+			ans += (temp - '0') * (1<<(num - times));
+		}
+	}
+	return ans;
+}
+
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	
+	while(EOF != my_getline(header)){//input the header
+		//cope with the header map to the bit codes
+		int ptr = 0;
+		for(int i = 1; header[ptr]; i++){
+			int range = (1<<i) - 1;
+			for(int j = 0; j < range && header[ptr]; j++){
+				table[i][j] = header[ptr++];
+			}
+		}
+		//input the message
+		int len;
+		while((len = readbit(3))){
+			int value;
+			while(1){
+				value = readbit(len);
+				if(value == (1 << len) - 1) break;
+				putchar(table[len][value]);
+			}
+		}
+		putchar('\n');
+		if((len = getchar()) && len == EOF) break;//attention: read '\n' at the end!!! ,or EOF
+	}
+	
+	//printf("Total time: %.4f s.", (double)clock()/CLOCKS_PER_SEC); 
+	return 0;
+}
