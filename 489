@@ -1,0 +1,60 @@
+#include<stdio.h>
+#include<time.h>
+#include<memory.h>
+//利用hash记录，有真值表如下：
+/********
+hash[i]   puzzle  guess
+2         1       1
+1         1       0
+0         0       0
+-1        0       1
+*********/
+const int LIMIT = 7;
+int round;
+char puzzle[3000];
+char guess[3000];
+int hash[28];
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	
+	while(1 == scanf("%d", &round) && round != -1){
+		//input
+		printf("Round %d\n", round);
+		scanf("%s%s", puzzle, guess);
+		//execute
+		memset(hash, 0, sizeof(hash));
+		int pzlog = 0;//log unique letters in puzzle
+		for(int i = 0; puzzle[i]; i++){
+			if(!hash[puzzle[i] - 'a']) hash[puzzle[i] - 'a'] = 1, pzlog++;
+		}
+		int crctlog = 0;//log correct guess number
+		int wrnglog = 0;//log wrong guess number
+		int i;
+		for(i = 0; guess[i]; i++){
+			if(hash[guess[i] - 'a'] == 1){
+				crctlog++;
+				if(crctlog == pzlog){
+					printf("You win.\n");
+					break;
+				}
+				hash[guess[i] - 'a'] = 2;
+			}
+			else if(hash[guess[i] - 'a'] == 0){
+				wrnglog++;
+				if(wrnglog == LIMIT){
+					printf("You lose.\n");
+					break;
+				}
+				hash[guess[i] - 'a'] = -1;
+			}
+		}
+		if(!guess[i]){
+			printf("You chickened out.\n");
+		}
+	}
+	
+	//printf("Total time: %.4f s.", (double)clock()/CLOCKS_PER_SEC); 
+	return 0;
+}
