@@ -1,0 +1,54 @@
+#include<stdio.h>
+#include<time.h>
+
+int people;
+int queue[21];
+
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	
+	int step1, step2;
+	while(1 == scanf("%d", &people) && people){
+		scanf("%d%d", &step1, &step2);
+		for(int i = 0; i < people; i++)
+			queue[i] = i + 1;
+		int count = people;
+		int ptr1 = -1, ptr2 = people;
+		while(count){
+			int i = 0;
+			//man one goes step1
+			while(i < step1){
+				// find the first who's value positive
+				ptr1 = (ptr1 + 1) % people;
+				for(; !queue[ptr1]; ptr1 = (ptr1 + 1) % people);
+				i++;
+			}
+			//man two goes step2
+			i = 0;
+			while(i < step2){
+				// find the first who's value positive
+				ptr2 = (ptr2 + people - 1) % people;
+				for(; !queue[ptr2]; ptr2 = (ptr2 + people - 1) % people);
+				i++;
+			}
+			if(ptr1 == ptr2){
+				if(count == people) printf("%3d", queue[ptr1]);
+				else printf(",%3d", queue[ptr1]);
+				queue[ptr1] = 0;
+				count--;
+			}
+			else {
+				if(count == people) printf("%3d%3d", queue[ptr1], queue[ptr2]);
+				else printf(",%3d%3d", queue[ptr1], queue[ptr2]);
+				queue[ptr1] = queue[ptr2] = 0;
+				count -= 2;
+			}
+		}
+		putchar('\n');
+	}
+	
+	//printf("Total time: %.4f s.", (double)clock()/CLOCKS_PER_SEC); 
+	return 0;
+}
