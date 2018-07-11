@@ -1,0 +1,57 @@
+#include<stdio.h>
+//#include<time.h>
+#include<stdlib.h>
+#include<string.h>
+#include<algorithm>
+//当且仅当字母出现次数能一一对应相等时为YES
+char src[150];
+char dst[150];
+//int cmp(const void *a, const void *b) {
+//	return *(int*)a - *(int *)b;
+//}
+int main() {
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+
+	while(EOF != scanf("%s%s", src, dst)) {
+		int hash[27];
+		memset(hash, 0, sizeof(hash));
+		int srclog[28];
+		int dstlog[28];
+		int srcptr = 0;//points to srclog now, >=1
+		for(int i = 0; src[i]; i++) {
+			if(!hash[src[i] - 'A']) {
+				hash[src[i] - 'A'] = ++srcptr;
+				srclog[srcptr] = 1;
+			} else {
+				srclog[hash[src[i] - 'A']]++;
+			}
+		}
+		memset(hash, 0, sizeof(hash));
+		int dstptr = 0;//points to dstlog now, >=1
+		for(int i = 0; dst[i]; i++) {
+			if(!hash[dst[i] - 'A']) {
+				hash[dst[i] - 'A'] = ++dstptr;
+				dstlog[dstptr] = 1;
+			} else {
+				dstlog[hash[dst[i] - 'A']]++;
+			}
+		}
+		if(srcptr == dstptr) {
+			//qsort(srclog+1, srcptr, sizeof(int), cmp);
+			//qsort(dstlog+1, dstptr, sizeof(int), cmp);
+			std::sort(srclog+1, srclog+srcptr+1);
+			std::sort(dstlog+1, dstlog+dstptr+1);
+			int i = 1;
+			for(; i <= srcptr && srclog[i] == dstlog[i]; i++);
+			if(i == srcptr + 1) printf("YES\n");
+			else printf("NO\n");
+		}
+		else{
+			printf("NO\n");
+		}
+	}
+
+	//printf("Total time: %.4f s.", (double)clock()/CLOCKS_PER_SEC);
+	return 0;
+}
