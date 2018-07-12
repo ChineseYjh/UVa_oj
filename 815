@@ -1,0 +1,41 @@
+#include <stdio.h>
+#include <stdlib.h>
+ 
+int block[31 * 31];
+ 
+int cmp(const void *a, const void *b)
+{
+	return *(int *)a - *(int *)b; 
+}
+ 
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	int m, n, water, cases = 1;
+	while (~scanf("%d%d", &m, &n) && m) {
+		for (int i = 0; i < m * n; ++i) {
+			scanf("%d", &block[i]);
+		}
+		scanf("%d", &water);
+		
+		qsort(block, m * n, sizeof(int), cmp);
+		
+		int sum = block[0], index = m * n;
+		
+		for (int i = 1; i < m * n; ++ i) {
+			if (block[i] > block[i - 1]) {
+				if (sum * 100 + water <= i * block[i] * 100) {
+					index = i;
+					break;
+				}
+			}
+			sum += block[i];
+		}
+		printf("Region %d\n", cases);
+		cases++;
+		printf("Water level is %.2lf meters.\n", 0.01 * (water + 100 * sum) / index);
+		printf("%.2lf percent of the region is under water.\n\n",100.0 * index / m / n);
+	} 
+    return 0;
+}
