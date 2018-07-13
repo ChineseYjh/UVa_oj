@@ -1,0 +1,70 @@
+#include<cstdio>
+#include<set>
+#include<vector>
+#include<ctime>
+#include<map>
+#include<stack>
+#include<algorithm>
+using namespace std;
+
+int kase;
+int cmdnum;
+char cmd[10];
+//将一个集合与一个整数ID产生一一映射 
+typedef set<int> Set;//set={id1,id2,...}
+map<Set, int>idcache;//set->id
+vector<Set>Setcache;//id->set
+
+int get_id(Set s){//如果该集合存在id则返回，否则为之创建。故每产生一个集合就调用一次这个函数 
+	if(idcache.count(s)) return idcache[s];
+	Setcache.push_back(s);
+	int t = idcache[s] = Setcache.size() - 1;
+	return t;
+}
+
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	
+	scanf("%d", &kase);
+	while(kase--){
+		stack<int>s;
+		scanf("%d", &cmdnum);
+		while(cmdnum--){
+			scanf("%s", cmd);
+			switch(cmd[0]){
+				case 'P':
+					s.push(get_id(Set()));
+					break;
+				case 'D':
+					s.push(s.top());
+					break;
+				default:
+					Set set1 = Setcache[s.top()];
+					s.pop();
+					Set set2 = Setcache[s.top()];
+					s.pop();
+					Set x;
+					if(cmd[0] == 'U'){
+						set_union(set1.begin(), set1.end(), set2.begin(), set2.end(), inserter(x, x.begin()));
+						s.push(get_id(x));
+					}
+					else if(cmd[0] == 'I'){
+						std::set_intersection(set1.begin(), set1.end(), set2.begin(), set2.end(), inserter(x, x.begin()));
+						s.push(get_id(x));
+					}
+					else if(cmd[0] == 'A'){
+						x = set2;
+						x.insert(get_id(set1));
+						s.push(get_id(x));
+					}
+			}
+			printf("%d\n", (Setcache[s.top()]).size());
+		}
+		printf("***\n");
+	}
+	
+	//printf("Total time: %.4f s.", (double)clock()/CLOCKS_PER_SEC); 
+	return 0;
+}
