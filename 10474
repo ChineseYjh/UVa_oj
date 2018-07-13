@@ -1,0 +1,33 @@
+#include<stdio.h>
+#include<time.h>
+#include<algorithm>
+int N, Q;
+int marbles[13333];
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	
+	int count = 0;
+	while(++count, scanf("%d%d", &N, &Q), N){
+		printf("CASE# %d:\n", count);
+		for(int i = 0; i < N; i++){
+			scanf("%d", marbles + i);
+		}
+		std::sort(marbles, marbles + N);
+		int q;
+		for(int i = 0; i < Q; i++){
+			scanf("%d", &q);
+			int pos = std::lower_bound(marbles, marbles + N, q) - marbles;
+			if(pos >= N || marbles[pos] != q){
+				printf("%d not found\n", q);
+			}
+			else {
+				printf("%d found at %d\n", q, pos + 1);
+			}
+		}
+	}
+	
+	//printf("Total time: %.4f s.", (double)clock()/CLOCKS_PER_SEC); 
+	return 0;
+}
