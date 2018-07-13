@@ -1,0 +1,42 @@
+#include<cstdio>
+#include<ctime>
+#include<map>
+#include<string>
+#include<vector>
+#include<algorithm>
+#include<iostream>
+using namespace std;
+
+string input;
+map<string, vector<string> >Hash;//eg. Hash['abc'] = 'CaB'
+
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	
+	while(cin >> input && input[0] != '#'){
+		int len = input.length();
+		string value(input);
+		for(int i = 0; i < len; i++){
+			if(value[i] >= 'A' && value[i] <= 'Z'){
+				value[i] = value[i] + 'a' - 'A';
+			}
+		}
+		sort(value.begin(), value.end());
+		(Hash[value]).push_back(input);
+	}
+	vector<string>ans;
+	for(auto i = Hash.begin(); i != Hash.end(); i++){
+		if((i->second).size() == 1){
+			ans.push_back((i->second)[0]); 
+		}
+	}
+	sort(ans.begin(), ans.end());
+	int len = ans.size();
+	for(int i = 0; i < len; i++){
+		cout << ans[i] << '\n';
+	}
+	//printf("Total time: %.4f s.", (double)clock()/CLOCKS_PER_SEC); 
+	return 0;
+}
