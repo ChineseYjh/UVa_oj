@@ -1,0 +1,42 @@
+#include<bits/stdc++.h>
+using namespace std;
+int num;
+//char files[101][61];
+string files[101];
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	
+	while(~scanf("%d", &num)){
+		//input
+		for(int i = 0; i < num; i++){
+			//scanf("%s", files[i]);
+			cin >> files[i];
+		}
+		//get the column numbers
+		//int len = strlen(files[0]);
+		int len = files[0].length();
+		for(int i = 1; i < num; i++){
+			//len = (len >= strlen(files[i]) ? len : strlen(files[i]));
+			len = (len >= files[i].length() ? len : files[i].length());
+		}
+		int columns = 62 / (len + 2);
+		//get the minimal maximal rows
+		int rows = (num % columns ? num / columns + 1 : num / columns);
+		sort(files, files + num);
+		//print the answers
+		for(int i = 0; i < 60; i++) putchar('-');
+		putchar('\n');
+		for(int i = 0; i < rows; i++){
+			for(int j = 0; j < columns - 1; j++){
+				printf("%-*s", len + 2, files[j * rows + i].c_str());
+			}
+			if((columns - 1) * rows + i < num) printf("%-*s", len, files[(columns - 1) * rows + i].c_str());
+			putchar('\n');
+		}
+	}
+	
+	//printf("Total time: %.4f s.", (double)clock()/CLOCKS_PER_SEC); 
+	return 0;
+}
