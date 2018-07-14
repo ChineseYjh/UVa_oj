@@ -1,0 +1,62 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int teamnum;
+int elenum;
+int ele;
+char cmd[8];
+
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+		
+	int scenarios = 0;
+	int hash[1002];//team_id->qcache_pos
+	while(++scenarios, scanf("%d", &teamnum), teamnum){
+		queue<int>qcache[1002];//(circular) qcache_pos->team_queue, it stores the sequence of the teams
+		int head = 0;//the subscript of the first queue in qcache
+		int tail = 0;//the subscript of the last queue in qcache plus 1
+		map<int, int>teamcache;//team_element->team_id
+		memset(hash, -1, sizeof(hash));
+		//input the team information
+		for(int i = 0; i < teamnum; i++){
+			scanf("%d", &elenum);
+			for(int j = 0; j < elenum; j++){
+				scanf("%d", &ele);
+				teamcache[ele] = i; 
+			}
+		}
+		//print the title
+		printf("Scenario #%d\n", scenarios);
+		//execute the command
+		while(scanf("%s", cmd), cmd[0] != 'S'){
+			if(cmd[0] == 'E'){
+				scanf("%d", &ele);
+				int id = teamcache[ele];
+				if(hash[id] == -1){//this team hasn't been in the qcache
+					hash[id] = tail;
+					qcache[tail].push(ele);
+					tail = (tail + 1) % 1002;
+				}
+				else{//this team has been in the qcache
+					qcache[hash[id]].push(ele);
+				}
+			}
+			else if(cmd[0] == 'D'){
+				int lastele = qcache[head].front();
+				printf("%d\n", lastele);
+				qcache[head].pop();
+				if(qcache[head].empty()){
+					head = (head + 1) % 1002;
+					hash[teamcache[lastele]] = -1;
+				}
+			}
+		}
+		putchar('\n');
+	}
+	
+	
+	//printf("Total time: %.4f s.", (double)clock()/CLOCKS_PER_SEC); 
+	return 0;
+}
