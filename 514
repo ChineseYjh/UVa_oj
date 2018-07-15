@@ -1,0 +1,49 @@
+//#include<bits/stdc++.h>
+#include<iostream>
+#include<stack>
+#include<ctime>
+using namespace std;
+
+int permutation[1001];
+int n;//number of the coaches
+
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+
+	//int count = 0;
+	while (scanf("%d", &n), n) {
+		//the extra blank line
+		//if (count++) putchar('\n');
+		while (scanf("%d", permutation), permutation[0]) {
+			//input
+			for (int i = 1; i < n; i++) scanf("%d", permutation + i);
+			//simulate
+			stack<int>s;
+			int ptr = 0;//points to the permutation
+			int ele = 1;//needing be pushed to the stack
+			while (!s.empty() || ptr < n) {
+				while (!s.empty() && s.top() == permutation[ptr]) {
+					s.pop();
+					ptr++;
+				}
+				if (ele == permutation[ptr]) ptr++, ele++;
+				else if (ele <= n) {
+					s.push(ele++);
+				}
+				else {//no more pushes
+					if (!s.empty() && s.top() != permutation[ptr]) {
+						break;//wrong
+					}
+				}
+			}
+			if (ptr < n) printf("No\n");
+			else printf("Yes\n");
+		}
+		putchar('\n');
+	}
+
+	//printf("Total time: %.3f s.\n", (double)clock() / CLOCKS_PER_SEC);
+	return 0;
+}
