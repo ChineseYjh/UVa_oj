@@ -1,0 +1,63 @@
+#include<cstdio>
+#include<ctime>
+#include<stack>
+#include<cstring>
+
+using namespace std;
+
+int n;
+char matrix[1];
+char expression[6666];
+int row, column;
+struct Matrix
+{
+	int row;
+	int column;
+} hash[30];
+
+int main() {
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+
+	scanf("%d", &n);
+	while(n--) {
+		scanf("%s%d%d", matrix, &row, &column);
+		hash[matrix[0] - 'A'].row = row;
+		hash[matrix[0] - 'A'].column = column;
+	}
+	while(~scanf("%s", expression)) {
+		int size = strlen(expression);
+		if(size == 1) {
+			printf("0\n");
+			continue;
+		}
+		long long ans = 0;
+		stack<Matrix>s;
+		int i;
+		for(i = 0; i < size; i++) {
+			if(expression[i] >= 'A' && expression[i] <= 'Z') {
+				s.push(hash[expression[i] - 'A']);
+			}
+			else if(expression[i] == ')'){
+				Matrix m1 = s.top();
+				s.pop();
+				Matrix m2 = s.top();
+				s.pop();
+				//m2 * m1
+				if(m1.row != m2.column){
+					printf("error\n");
+					break;
+				}
+				else {
+					ans += (m1.column) * (m1.row) * (m2.row);
+					Matrix newm = {m2.row, m1.column};
+					s.push(newm);
+				}
+			}
+		}
+		if(i == size) printf("%lld\n", ans);
+	}
+
+	//printf("Total time: %.3f s.\n", (double)clock()/CLOCKS_PER_SEC);
+	return 0;
+}
