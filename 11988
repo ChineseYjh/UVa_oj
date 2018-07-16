@@ -1,0 +1,42 @@
+#include<bits/stdc++.h>
+using namespace std;
+//use string list to simulate the movement of the cursor
+string line;
+
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	
+	while(cin >> line){
+		list<string>ans({string()});
+		auto temp = ans.begin();
+		auto i = line.begin();
+		while(i != line.end()){
+			if(*i != ']' && *i != '['){
+				//into string
+				*temp += (*i);
+				i++;
+			}
+			else {
+				while(*(i + 1) == ']' || *(i + 1) == '[') i++;
+				switch(*i){
+					case '[':
+						ans.push_front(string());
+						temp = ans.begin();
+						break;
+					case ']':
+						ans.push_back(string());
+						temp = ans.end();
+						temp--;
+				}
+				i++;
+			}
+		}
+		for(auto i = ans.begin(); i != ans.end(); i++) cout << *i;
+		putchar('\n');
+	}
+	
+	//printf("Total time: %.3f s.\n", (double)clock()/CLOCKS_PER_SEC);
+	return 0;
+}
