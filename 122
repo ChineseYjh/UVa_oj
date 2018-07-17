@@ -1,0 +1,75 @@
+#include<string>
+#include<iostream>
+#include<sstream>
+#include<ctime>
+#include<cstring>
+using namespace std;
+
+string input;
+char temp;
+int value;
+int tree[1 << 28];//non-zero indexed
+int main() {
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	//input until EOF
+	while (EOF != cin.peek()) {
+		memset(tree, 0, sizeof(tree));
+		//cout<<(char)cin.peek()<<endl;
+		//input until the tree is completed
+		int total = 0;
+		while (cin >> input) {
+			if (input == "()") {
+				break;
+			}
+			stringstream decoration(input);
+			decoration >> temp >> value >> temp;
+			int pos = 1;
+			while (decoration >> temp, temp != ')') {
+				if (temp == 'L') pos *= 2;
+				else if (temp == 'R') pos = 2 * pos + 1;
+			}
+			tree[pos] = value;
+			total++;
+		}
+		getchar();//get '\n'
+		//level order
+#define LEN 257
+		int q[257];//index queue
+		int head = 0;
+		int tail = 0;
+		stringstream ans;
+		if (tree[1]) {
+			q[tail++] = 1;
+			ans << tree[1];
+			total--;
+		}
+		else {
+			printf("not complete\n");
+			continue;
+		}
+		while (head != tail) {
+			int temp = q[head];
+			head = (head + 1) % LEN;
+			if (tree[temp * 2]) {
+				q[tail] = 2 * temp;
+				tail = (tail + 1) % LEN;
+				ans << " " << tree[2 * temp];
+				total--;
+			}
+			if (tree[temp * 2 + 1]) {
+				q[tail] = temp * 2 + 1;
+				tail = (tail + 1) % LEN;
+				ans << " " << tree[2 * temp + 1];
+				total--;
+			}
+		}
+		if (total) printf("not complete\n");
+		else {
+			cout << ans.str() << '\n';
+		}
+	}
+
+	//printf("Total time: %.3f s.\n", (double)clock() / CLOCKS_PER_SEC);
+	return 0;
+}
