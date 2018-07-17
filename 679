@@ -1,0 +1,31 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+//a[n]=k表示来到节点n一共的球数，则a[2n] =  (k+1)/2 if(k%2=1) or k/2 if(k%2=0); a[2n+1] = (k-1)/2 if(k%2=1) or k/2 if(k%2=0) 
+int kase;
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	
+	scanf("%d", &kase);
+	int depth, come;//深度和球总数 
+	while(kase--){
+		scanf("%d%d", &depth, &come);
+		int num = 1;
+		for(int i = 1; i < depth; i++){
+			if(come % 2 == 1){
+				num = num * 2;
+				come = (come + 1) / 2;
+			}
+			else {
+				num = 2 * num + 1;
+				come = come / 2;
+			}
+		}
+		printf("%d\n", num);
+	}
+	
+	//printf("Total time: %.3f s.\n", (double)clock()/CLOCKS_PER_SEC);
+	return 0;
+}
