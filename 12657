@@ -1,0 +1,140 @@
+#include<iostream>
+#include<ctime>
+using namespace std;
+
+int n, m, cmd, op1, op2;//command: cmd op1 op2
+//struct box {
+//	int pre;//the box numeber of the previous box
+//	int Next;//the box numeber of the Next box
+//} boxes[100010];//non-zero indexed, index == box number
+int pre[100010];//the box numeber of the previous box
+int Next[100010];//the box numeber of the Next box
+bool flag = true;//indicates whether pre is pre and Next is next
+
+void f1(int &op1, int &op2) {
+	//get op1 out of the origin position
+	Next[pre[op1]] = Next[op1];
+	pre[Next[op1]] = pre[op1];
+	//make op1 points to the new position
+	pre[op1] = pre[op2];
+	Next[op1] = op2;
+	//make op2 and his predecessor points to op1
+	Next[pre[op2]] = op1;
+	pre[op2] = op1;
+}
+void f2(int &op1, int &op2) {
+	//get op1 out of the origin position
+	Next[pre[op1]] = Next[op1];
+	pre[Next[op1]]= pre[op1];
+	//make op1 points to the new position
+	pre[op1] = op2;
+	Next[op1] = Next[op2];
+	//make op2 and his successor points to op1
+	pre[Next[op2]] = op1;
+	Next[op2] = op1;
+}
+int main() {
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+
+	int kase = 0;
+	while(++kase, 2 == scanf("%d%d", &n, &m)) {
+		//init, we set virtual head, tail to prevent overflow
+		//for(int i = 0; i <= n + 1; i++) boxes[i].pre = i - 1, boxes[i].Next = i + 1;
+		for(int i = 0; i <= n + 1; i++) pre[i] = i - 1, Next[i] = i + 1;
+		flag = true;
+		//execute the command
+		while(m--) {
+			scanf("%d", &cmd);
+			if(cmd != 4) scanf("%d%d", &op1, &op2);
+			switch(cmd) {
+				case 1:
+//					if(op1 != boxes[op2].pre) {
+//						//get op1 out of the origin position
+//						boxes[pre[op1]].Next = boxes[op1].Next;
+//						boxes[boxes[op1].Next].pre = boxes[op1].pre;
+//						//make op1 points to the new position
+//						boxes[op1].pre = boxes[op2].pre;
+//						boxes[op1].Next = op2;
+//						//make op2 and his predecessor points to op1
+//						boxes[boxes[op2].pre].Next = op1;
+//						boxes[op2].pre = op1;
+//					}
+					if(flag && op1 != pre[op2]) {
+						f1(op1, op2);
+					} else if(!flag && op1 != Next[op2]) {
+						f2(op1, op2);
+					}
+					break;
+				case 2:
+					if(flag && op1 != Next[op2]) {
+						f2(op1, op2);
+					} else if(!flag && op1 != pre[op2]) {
+						f1(op1, op2);
+					}
+					break;
+				case 3:
+					//swap
+				{
+					int v1_pre = pre[op1];
+					int v1_Next = Next[op1];
+					int v2_pre = pre[op2];
+					int v2_Next = Next[op2];
+					if(v1_pre == op2 || v2_pre == op1) {
+						int p, n;
+						if(v1_pre == op2) p = op2, n = op1;
+						else p = op1, n = op2;
+						//eg. 3->1->2->4
+						Next[pre[p]] = n;//3<->2
+						pre[n] = pre[p];
+						pre[Next[n]] = p;//1<->4
+						Next[p] = Next[n];
+						pre[p] = n;//1<->2
+						Next[n] = p;
+					} else {
+						Next[v1_pre] = op2;
+						pre[v1_Next] = op2;
+						Next[v2_pre] = op1;
+						pre[v2_Next] = op1;
+						pre[op1] = v2_pre;
+						Next[op1] = v2_Next;
+						pre[op2] = v1_pre;
+						Next[op2] = v1_Next;
+					}
+					break;
+				}
+				case 4:
+					//reverse
+//					int head = Next[0];
+//					int tail = pre[n + 1];
+//					for(int i = 1; i <= n; i++) {
+//						pre[i] ^= Next[i];
+//						Next[i] ^= pre[i];
+//						pre[i] ^= Next[i];
+//					}
+//					Next[head] = n + 1;
+//					pre[tail] = 0;
+					//the above will cause TLE
+					flag = !flag;
+			}
+		}
+		//output
+		long long ans = 0;
+		if(flag) {
+			int head = Next[0];
+			for(int i = 1; i <= n; i++) {
+				if(i % 2) ans += head;
+				head = Next[head];
+			}
+		} else {
+			int head = pre[n + 1];
+			for(int i = 1; i <= n; i++){
+				if(i % 2) ans += head;
+				head = pre[head];
+			}
+		}
+		printf("Case %d: %lld\n", kase, ans);
+	}
+	//printf("Total time: %.3f s.\n", (double)clock()/CLOCKS_PER_SEC);
+	return 0;
+}
