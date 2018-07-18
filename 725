@@ -1,0 +1,60 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int N;
+int f, g, h, i, j;
+int abcde;
+int bits[11];//zero-indexed
+
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	int count = 0;
+	while(scanf("%d", &N), N){
+		if(count) putchar('\n');
+		count++;
+		bool flag = false;
+		for(f = 0; f <= 9; f++){
+			for(g = 0; g <= 9; g++){
+				if(f == g) continue;
+				for(h = 0; h <= 9; h++){
+					if(f == h || g == h) continue;
+					for(i = 0; i <= 9; i++){
+						if(f == i || g == i || h == i) continue;
+						for(j = 0; j <= 9; j++){
+							if(f == j || g == j || h == j || i ==j) continue;
+							abcde = N * (f * 10000 + g * 1000 + h * 100 + i * 10 + j);
+							if(abcde / 100000) goto END;
+							bits[5] = f, bits[6] = g, bits[7] = h, bits[8] = i, bits[9] = j;
+							//get bits
+							int temp;
+							for(int i = 0; i < 5; i++){
+								temp = abcde / (int)pow(10, i);
+								temp = temp % 10;
+								bits[i] = temp;
+							}
+							//check repetition
+							int pos1, pos2;
+							for(pos1 = 0; pos1 < 5; pos1++){
+								for(pos2 = pos1 + 1; pos2 < 10; pos2++){
+									if(bits[pos1] == bits[pos2]) goto FOUND;
+								}
+							}
+FOUND:
+							if(pos2 == 10 && pos1 == 5){
+								flag = true;
+								printf("%d / %d%d%d%d%d = %d\n", abcde, f, g, h, i, j, N);
+							}
+						}
+					}
+				}
+			}
+		}
+END:
+		if(!flag) printf("There are no solutions for %d.\n", N);
+	}
+	
+	//printf("Total time: %.3f s.\n", (double)clock()/CLOCKS_PER_SEC);
+	return 0;
+}
