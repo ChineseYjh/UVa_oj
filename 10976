@@ -1,0 +1,31 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int k;
+int x, y;
+int logx[10000];
+int logy[10000];
+
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	
+	while(~scanf("%d", &k)){
+		int count = 0;
+		for(y = k + 1; y <= 2 * k; y++){
+			if((k * y) % (y - k) == 0){
+				logy[count] = y;
+				logx[count] = x = (k * y) / (y - k);
+				count++;
+			}
+		}
+		printf("%d\n", count);
+		for(int i = 0; i < count; i++){
+			printf("1/%d = 1/%d + 1/%d\n", k, logx[i], logy[i]);
+		}
+	}
+	
+	//printf("Total time: %.3f s.\n", (double)clock()/CLOCKS_PER_SEC);
+	return 0;
+}
