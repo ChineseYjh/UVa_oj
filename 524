@@ -1,0 +1,41 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+bool is_prime[33];
+int primes[11] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31};
+int arr[17] = {0, 1};//non-zero-indexed
+void find_prime_circle(int n, int cur){
+	if(cur == n + 1) {
+		if(is_prime[arr[n] + 1]){
+			for(int i = 1; i < n; i++) printf("%d ", arr[i]);
+			printf("%d\n", arr[n]);
+		}
+		return;
+	}
+	for(int i = 2; i <= n; i++){
+		int j;
+		for(j = 2; j < cur; j++) if(arr[j] == i) break;
+		if(j == cur && is_prime[i + arr[cur - 1]]){
+			arr[cur] = i;
+			find_prime_circle(n, cur + 1);
+		}
+	}
+}
+
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	
+	int kase = 0, n;
+	for(int i = 0; i < 11; i++) is_prime[primes[i]] = true;
+	//for(int i = 0; i < 17; i++) arr[i] = i;
+	while(~scanf("%d", &n)){
+		if(kase++) putchar('\n');
+		printf("Case %d:\n", kase);
+		find_prime_circle(n, 2);
+	}
+	
+	//printf("Total time: %.3f s.\n", (double)clock()/CLOCKS_PER_SEC);
+	return 0;
+}
