@@ -1,0 +1,70 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+char ans[81];
+int n, L;
+int cnt;//count to n
+int depth;
+void dfs(int cur) {
+	if(cnt == n) return;
+	depth = cur + 1;
+	int i;
+	for(i = 0; i < L; i++) {
+		ans[cur] = 'A' + i;
+		int step = 1;
+		for(; step <= (cur + 1) / 2; step++) {
+			int ptr = cur;
+			for(; ans[ptr] == ans[ptr - step]; ptr--);
+			if(ptr == cur - step) break;
+		}
+		if(step == (cur + 3) / 2) {
+			//is hard
+			cnt++;
+			dfs(cur + 1);
+		}
+		if(cnt == n) return;
+	}
+	if(i == L) ans[cur] = 0;
+}
+
+int main() {
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+
+	while(scanf("%d%d", &n, &L), n) {
+		//fill the ans
+		cnt = 0;
+		depth = 0;
+		dfs(0);
+		//print the ans
+		int i;
+		for(i = 0; i < 16; i++) {
+			int j;
+			for(j = 0; j < 4; j++) {
+				if(ans[4 * i + j]) putchar(ans[4 * i + j]);
+				else break;
+			}
+			if(j < 4) break;
+			if(i < 15 && ans[4 * i + 4]) putchar(' ');
+		}
+		if(i == 16 && ans[64]) {
+			putchar('\n');
+			int i;
+			for(i = 0; ; i++) {
+				int j;
+				for(j = 0; j < 4; j++) {
+					if(ans[64 + 4 * i + j]) putchar(ans[64 + 4 * i + j]);
+					else break;
+				}
+				if(j < 4) break;
+				if(ans[64 + 4 * i + j]) putchar(' ');
+			}
+		}
+		putchar('\n');
+		printf("%d\n", depth);
+		memset(ans, 0, sizeof(ans));
+	}
+
+	//printf("Total time: %.3f s.\n", (double)clock()/CLOCKS_PER_SEC);
+	return 0;
+}
