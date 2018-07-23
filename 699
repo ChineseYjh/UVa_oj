@@ -1,0 +1,41 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int root;
+int ans[170];
+int lowest;
+//create a sub-tree at ans[index] with node whose value is root
+void create_tree(int root, int index){
+	ans[index] += root;
+	if(index < lowest) lowest = index;
+	int left, right;
+	scanf("%d", &left);
+	if(left != -1) create_tree(left, index - 1);
+	scanf("%d", &right);
+	if(right != -1) create_tree(right, index + 1);
+} 
+
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	
+	int kase = 0;
+	while(++kase, scanf("%d", &root), root != -1){
+		//input and log the piles
+		memset(ans, 0, sizeof(ans));
+		lowest = 80;
+		create_tree(root, 80);
+		//output
+		printf("Case %d:\n", kase);
+		printf("%d", ans[lowest]);
+		for(int i = lowest + 1; ans[i]; i++){
+			printf(" %d", ans[i]);
+		}
+		putchar('\n');
+		putchar('\n');
+	}
+	
+	//printf("Total time: %.3f s.\n", (double)clock()/CLOCKS_PER_SEC);
+	return 0;
+}
