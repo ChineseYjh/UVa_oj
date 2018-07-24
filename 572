@@ -1,0 +1,65 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+int n, m;
+char region[101][101];
+bool visited[101][101];
+int cnt;
+
+//bfs the region in the same deposit
+void bfs(int i, int j){
+	#define CONTENT 101
+	struct pos
+	{
+		int row;
+		int col;
+	} q[CONTENT];
+	int head = 0, tail = 0;
+	q[tail] = {i, j};
+	visited[i][j] = true;
+	tail = (tail + 1) % CONTENT;
+	while(head != tail){
+		pos temp = q[head];
+		head = (head + 1) % CONTENT;
+		for(int dx = -1; dx <= 1; dx++){
+			for(int dy = -1; dy <= 1; dy++){
+				int x = temp.col + dx;
+				int y = temp.row + dy;
+				if((dx || dy) && x >= 0 && x < n && y >= 0 && y < m && !visited[y][x] && region[y][x] == '@'){
+					q[tail] = {y, x};
+					visited[y][x] = true;
+					tail = (tail + 1) % CONTENT;
+				}
+			}
+		}
+	}
+}
+
+int main()
+{
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+	
+	while(scanf("%d%d", &m, &n), m){
+		//input
+		for(int i = 0; i < m; i++)
+			for(int j = 0; j < n; j++)
+				cin >> region[i][j];
+		//init
+		memset(visited, 0, sizeof(visited));
+		cnt = 0;
+		//bfs
+		for(int i = 0; i < m; i++){
+			for(int j = 0; j < n; j++){
+				if(region[i][j] == '@' && !visited[i][j]){
+					cnt++;
+					bfs(i, j);
+				}
+			}
+		}
+		printf("%d\n", cnt);
+	}
+	
+	//printf("Total time: %.3f s.\n", (double)clock()/CLOCKS_PER_SEC);
+	return 0;
+}
