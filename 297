@@ -1,0 +1,134 @@
+#include<iostream>
+#include<string>
+#include<ctime>
+#include<cmath>
+using namespace std;
+#define TOTAL 1024
+string tree1;
+string tree2;
+//check the two trees together use two poiters
+//when depth1 == depth2, it's a must to guarantee ptr1 and ptr2 point to the same position of a tree
+//when it's not, the deeper ptr is walking out its own sub-tree
+void count_merge_pixels(int depth1, int depth2, int &ptr1, int &ptr2, int &pixels) {
+	if (depth1 == depth2) {
+		//at least full
+		if (tree1[ptr1] == 'f' || tree2[ptr2] == 'f') {
+			pixels += TOTAL / (int)pow(4, depth1 - 1);
+			if (tree1[ptr1] != 'f') {
+				if (tree1[ptr1] == 'e') return;
+				else {
+					int waste = 0;
+					ptr1++;
+					count_merge_pixels(depth1 + 1, depth2, ptr1, ptr2, waste);
+					ptr1++;
+					count_merge_pixels(depth1 + 1, depth2, ptr1, ptr2, waste);
+					ptr1++;
+					count_merge_pixels(depth1 + 1, depth2, ptr1, ptr2, waste);
+					ptr1++;
+					count_merge_pixels(depth1 + 1, depth2, ptr1, ptr2, waste);
+				}
+			}
+			else if (tree2[ptr2] != 'f') {
+				if (tree2[ptr2] == 'e') return;
+				else {
+					int waste = 0;
+					ptr2++;
+					count_merge_pixels(depth1, depth2 + 1, ptr1, ptr2, waste);
+					ptr2++;
+					count_merge_pixels(depth1, depth2 + 1, ptr1, ptr2, waste);
+					ptr2++;
+					count_merge_pixels(depth1, depth2 + 1, ptr1, ptr2, waste);
+					ptr2++;
+					count_merge_pixels(depth1, depth2 + 1, ptr1, ptr2, waste);
+				}
+			}
+		}
+		//at least part
+		else if (tree1[ptr1] == 'p' || tree2[ptr2] == 'p') {
+			if (tree1[ptr1] == 'p' && tree2[ptr2] == 'p') {
+				ptr1++, ptr2++;
+				count_merge_pixels(depth1 + 1, depth2 + 1, ptr1, ptr2, pixels);
+				ptr1++, ptr2++;
+				count_merge_pixels(depth1 + 1, depth2 + 1, ptr1, ptr2, pixels);
+				ptr1++, ptr2++;
+				count_merge_pixels(depth1 + 1, depth2 + 1, ptr1, ptr2, pixels);
+				ptr1++, ptr2++;
+				count_merge_pixels(depth1 + 1, depth2 + 1, ptr1, ptr2, pixels);
+			}
+			else {
+				if (tree1[ptr1] == 'p') {
+					ptr1++;
+					count_merge_pixels(depth1 + 1, depth2, ptr1, ptr2, pixels);
+					ptr1++;
+					count_merge_pixels(depth1 + 1, depth2, ptr1, ptr2, pixels);
+					ptr1++;
+					count_merge_pixels(depth1 + 1, depth2, ptr1, ptr2, pixels);
+					ptr1++;
+					count_merge_pixels(depth1 + 1, depth2, ptr1, ptr2, pixels);
+				}
+				else {
+					ptr2++;
+					count_merge_pixels(depth1, depth2 + 1, ptr1, ptr2, pixels);
+					ptr2++;
+					count_merge_pixels(depth1, depth2 + 1, ptr1, ptr2, pixels);
+					ptr2++;
+					count_merge_pixels(depth1, depth2 + 1, ptr1, ptr2, pixels);
+					ptr2++;
+					count_merge_pixels(depth1, depth2 + 1, ptr1, ptr2, pixels);
+				}
+			}
+		}
+	}
+	else {
+		if (depth1 > depth2) {
+			if (tree1[ptr1] == 'f') {
+				pixels += TOTAL / (int)pow(4, depth1 - 1);
+				return;
+			}
+			else if (tree1[ptr1] == 'p') {
+				ptr1++;
+				count_merge_pixels(depth1 + 1, depth2, ptr1, ptr2, pixels);
+				ptr1++;
+				count_merge_pixels(depth1 + 1, depth2, ptr1, ptr2, pixels);
+				ptr1++;
+				count_merge_pixels(depth1 + 1, depth2, ptr1, ptr2, pixels);
+				ptr1++;
+				count_merge_pixels(depth1 + 1, depth2, ptr1, ptr2, pixels);
+			}
+		}
+		else {
+			if (tree2[ptr2] == 'f') {
+				pixels += TOTAL / (int)pow(4, depth2 - 1);
+				return;
+			}
+			else if (tree2[ptr2] == 'p') {
+				ptr2++;
+				count_merge_pixels(depth1, depth2 + 1, ptr1, ptr2, pixels);
+				ptr2++;
+				count_merge_pixels(depth1, depth2 + 1, ptr1, ptr2, pixels);
+				ptr2++;
+				count_merge_pixels(depth1, depth2 + 1, ptr1, ptr2, pixels);
+				ptr2++;
+				count_merge_pixels(depth1, depth2 + 1, ptr1, ptr2, pixels);
+			}
+		}
+	}
+}
+
+int main() {
+	//freopen("input.txt", "r", stdin);
+	//freopen("output.txt", "w", stdout);
+
+	int kase;
+	scanf("%d", &kase);
+	while (kase--) {
+		cin >> tree1 >> tree2;
+		int pixels = 0;
+		int ptr1 = 0, ptr2 = 0;
+		count_merge_pixels(1, 1, ptr1, ptr2, pixels);
+		printf("There are %d black pixels.\n", pixels);
+	}
+
+	//printf("Total time: %.3f s.\n", (double)clock() / CLOCKS_PER_SEC);
+	return 0;
+}
